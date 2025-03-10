@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, CSSProperties } from "react";
 import { Bookmark, BookmarkCheck, Briefcase, Building, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -13,6 +13,7 @@ interface JobCardProps {
   skills: string[];
   posted: string;
   className?: string;
+  style?: CSSProperties;
 }
 
 export function JobCard({
@@ -25,6 +26,7 @@ export function JobCard({
   skills,
   posted,
   className,
+  style,
 }: JobCardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
@@ -41,6 +43,7 @@ export function JobCard({
         className
       )}
       onClick={() => setIsFlipped(!isFlipped)}
+      style={style}
     >
       {/* Front of Card */}
       <div 

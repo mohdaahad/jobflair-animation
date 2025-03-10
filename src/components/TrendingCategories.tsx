@@ -1,6 +1,7 @@
 
 import { Code, Briefcase, Brush, LineChart, Globe, Laptop, MessageSquare, Smartphone } from "lucide-react";
 import { CategoryCard } from "./CategoryCard";
+import { Link } from "react-router-dom";
 
 export function TrendingCategories() {
   const categories = [
@@ -66,15 +67,16 @@ export function TrendingCategories() {
         
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {categories.map((category, index) => (
-            <CategoryCard 
-              key={index}
-              icon={category.icon}
-              title={category.title}
-              count={category.count}
-              color={category.color}
-              className="animate-fade-in"
-              style={{ animationDelay: `${index * 100}ms` }}
-            />
+            <Link to={`/category/${category.title}`} key={index}>
+              <CategoryCard 
+                icon={category.icon}
+                title={category.title}
+                count={category.count}
+                color={category.color}
+                className="animate-fade-in"
+                style={{ animationDelay: `${index * 100}ms` }}
+              />
+            </Link>
           ))}
         </div>
       </div>

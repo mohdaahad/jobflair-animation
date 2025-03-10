@@ -1,6 +1,7 @@
 
 import { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { CSSProperties } from "react";
 
 interface CategoryCardProps {
   icon: LucideIcon;
@@ -8,15 +9,24 @@ interface CategoryCardProps {
   count: number;
   color: string;
   className?: string;
+  style?: CSSProperties;
 }
 
-export function CategoryCard({ icon: Icon, title, count, color, className }: CategoryCardProps) {
+export function CategoryCard({ 
+  icon: Icon, 
+  title, 
+  count, 
+  color, 
+  className,
+  style 
+}: CategoryCardProps) {
   return (
     <div 
       className={cn(
         "glass-card p-5 hover:scale-105 transition-all duration-300 cursor-pointer group",
         className
       )}
+      style={style}
     >
       <div 
         className="h-12 w-12 rounded-xl flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
