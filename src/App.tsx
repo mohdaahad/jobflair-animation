@@ -17,6 +17,10 @@ import AdminDashboard from "./pages/admin/AdminDashboard";
 import ManageJobSeekers from "./pages/admin/ManageJobSeekers";
 import ManageJobProviders from "./pages/admin/ManageJobProviders";
 import ManageJobRequests from "./pages/admin/ManageJobRequests";
+import JobProviderDashboard from "./pages/JobProviderDashboard";
+import PostJob from "./pages/job-provider/PostJob";
+import BrowseJobSeekers from "./pages/job-provider/BrowseJobSeekers";
+import AIScreening from "./pages/job-provider/AIScreening";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +45,12 @@ const App = () => (
           <Route path="/admin/job-seekers" element={<ManageJobSeekers />} />
           <Route path="/admin/job-providers" element={<ManageJobProviders />} />
           <Route path="/admin/job-requests" element={<ManageJobRequests />} />
+          
+          {/* Job Provider Routes */}
+          <Route path="/job-provider" element={<JobProviderDashboard />} />
+          <Route path="/job-provider/post-job" element={<PostJob />} />
+          <Route path="/job-provider/browse-seekers" element={<BrowseJobSeekers />} />
+          <Route path="/job-provider/ai-screening" element={<AIScreening />} />
           
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
