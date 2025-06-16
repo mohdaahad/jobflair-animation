@@ -13,6 +13,10 @@ import CategoryJobs from "./pages/CategoryJobs";
 import SignIn from "./pages/SignIn";
 import AboutUs from "./pages/AboutUs";
 import ContactUs from "./pages/ContactUs";
+import AdminDashboard from "./pages/admin/AdminDashboard";
+import ManageJobSeekers from "./pages/admin/ManageJobSeekers";
+import ManageJobProviders from "./pages/admin/ManageJobProviders";
+import ManageJobRequests from "./pages/admin/ManageJobRequests";
 
 const queryClient = new QueryClient();
 
@@ -31,6 +35,13 @@ const App = () => (
           <Route path="/sign-in" element={<SignIn />} />
           <Route path="/about-us" element={<AboutUs />} />
           <Route path="/contact-us" element={<ContactUs />} />
+          
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/job-seekers" element={<ManageJobSeekers />} />
+          <Route path="/admin/job-providers" element={<ManageJobProviders />} />
+          <Route path="/admin/job-requests" element={<ManageJobRequests />} />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
