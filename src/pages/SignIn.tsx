@@ -2,12 +2,60 @@
 import { NavBar } from "@/components/NavBar";
 import { Footer } from "@/components/Footer";
 import { useState } from "react";
+import { useUser } from "@/contexts/UserContext";
 import { Mail, Lock, User, Briefcase } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const SignIn = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [userType, setUserType] = useState<"jobseeker" | "employer">("jobseeker");
+  const [userType, setUserType] = useState<"job-seeker" | "job-provider">("job-seeker");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    confirmPassword: ""
+  });
+  
+  const { login } = useUser();
+  const navigate = useNavigate();
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Simple demo login - in real app this would be API calls
+    const userData = {
+      id: "1",
+      name: formData.name || "Demo User",
+      email: formData.email,
+      type: userType as "job-seeker" | "job-provider"
+    };
+
+    login(userData);
+
+    // Redirect based on user type
+    switch (userType) {
+      case 'job-provider':
+        navigate('/job-provider');
+        break;
+      case 'job-seeker':
+        navigate('/job-seeker');
+        break;
+      default:
+        navigate('/');
+    }
+  };
+
+  // Demo admin login
+  const handleAdminLogin = () => {
+    const adminUser = {
+      id: "admin",
+      name: "Admin User",
+      email: "admin@jobflair.com",
+      type: "admin" as const
+    };
+    login(adminUser);
+    navigate('/admin');
+  };
 
   return (
     <div className="min-h-screen">
@@ -30,28 +78,28 @@ const SignIn = () => {
               <div className="mb-6">
                 <div className="flex gap-4">
                   <button
-                    onClick={() => setUserType("jobseeker")}
+                    onClick={() => setUserType("job-seeker")}
                     className={`flex-1 flex flex-col items-center p-3 rounded-xl transition-all duration-200 ${
-                      userType === "jobseeker" 
+                      userType === "job-seeker" 
                         ? "glass bg-job/10 border border-job/20" 
                         : "glass hover:bg-foreground/5"
                     }`}
                   >
-                    <User className={`h-6 w-6 mb-2 ${userType === "jobseeker" ? "text-job" : "text-foreground/60"}`} />
-                    <span className={userType === "jobseeker" ? "text-job font-medium" : "text-foreground/60"}>
+                    <User className={`h-6 w-6 mb-2 ${userType === "job-seeker" ? "text-job" : "text-foreground/60"}`} />
+                    <span className={userType === "job-seeker" ? "text-job font-medium" : "text-foreground/60"}>
                       Job Seeker
                     </span>
                   </button>
                   <button
-                    onClick={() => setUserType("employer")}
+                    onClick={() => setUserType("job-provider")}
                     className={`flex-1 flex flex-col items-center p-3 rounded-xl transition-all duration-200 ${
-                      userType === "employer" 
+                      userType === "job-provider" 
                         ? "glass bg-job/10 border border-job/20" 
                         : "glass hover:bg-foreground/5"
                     }`}
                   >
-                    <Briefcase className={`h-6 w-6 mb-2 ${userType === "employer" ? "text-job" : "text-foreground/60"}`} />
-                    <span className={userType === "employer" ? "text-job font-medium" : "text-foreground/60"}>
+                    <Briefcase className={`h-6 w-6 mb-2 ${userType === "job-provider" ? "text-job" : "text-foreground/60"}`} />
+                    <span className={userType === "job-provider" ? "text-job font-medium" : "text-foreground/60"}>
                       Employer
                     </span>
                   </button>
@@ -59,7 +107,7 @@ const SignIn = () => {
               </div>
             )}
 
-            <form className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4">
               {!isLogin && (
                 <div className="space-y-1">
                   <label htmlFor="name" className="text-sm font-medium block">Full Name</label>
@@ -72,6 +120,9 @@ const SignIn = () => {
                       type="text"
                       className="w-full py-2 pl-10 pr-4 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-job/50"
                       placeholder="Enter your name"
+                      value={formData.name}
+                      onChange={(e) => setFormData({...formData, name: e.target.value})}
+                      required
                     />
                   </div>
                 </div>
@@ -88,6 +139,9 @@ const SignIn = () => {
                     type="email"
                     className="w-full py-2 pl-10 pr-4 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-job/50"
                     placeholder="Enter your email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    required
                   />
                 </div>
               </div>
@@ -103,6 +157,9 @@ const SignIn = () => {
                     type="password"
                     className="w-full py-2 pl-10 pr-4 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-job/50"
                     placeholder="Enter your password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({...formData, password: e.target.value})}
+                    required
                   />
                 </div>
               </div>
@@ -119,6 +176,9 @@ const SignIn = () => {
                       type="password"
                       className="w-full py-2 pl-10 pr-4 glass rounded-xl focus:outline-none focus:ring-2 focus:ring-job/50"
                       placeholder="Confirm your password"
+                      value={formData.confirmPassword}
+                      onChange={(e) => setFormData({...formData, confirmPassword: e.target.value})}
+                      required
                     />
                   </div>
                 </div>
@@ -136,9 +196,9 @@ const SignIn = () => {
                       Remember me
                     </label>
                   </div>
-                  <a href="#" className="text-job hover:underline">
+                  <Link to="/forgot-password" className="text-job hover:underline">
                     Forgot password?
-                  </a>
+                  </Link>
                 </div>
               )}
 
@@ -149,6 +209,16 @@ const SignIn = () => {
                 {isLogin ? "Sign In" : "Create Account"}
               </button>
             </form>
+
+            {/* Demo Admin Login Button */}
+            <div className="mt-4">
+              <button
+                onClick={handleAdminLogin}
+                className="w-full py-2.5 glass bg-red-600 hover:bg-red-700 text-white rounded-xl transition-colors duration-200 font-medium"
+              >
+                Demo Admin Login
+              </button>
+            </div>
 
             <div className="mt-6 text-center text-sm">
               <p className="text-foreground/70">

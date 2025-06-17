@@ -1,9 +1,9 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { UserProvider } from "@/contexts/UserContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import Companies from "./pages/Companies";
@@ -66,70 +66,72 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/companies" element={<Companies />} />
-          <Route path="/resources" element={<Resources />} />
-          <Route path="/for-employers" element={<ForEmployers />} />
-          <Route path="/category/:category" element={<CategoryJobs />} />
-          <Route path="/sign-in" element={<SignIn />} />
-          <Route path="/sign-up" element={<SignUp />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route path="/about-us" element={<AboutUs />} />
-          <Route path="/contact-us" element={<ContactUs />} />
-          
-          {/* Admin Routes */}
-          <Route path="/admin/login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminDashboard />} />
-          <Route path="/admin/job-seekers" element={<ManageJobSeekers />} />
-          <Route path="/admin/job-providers" element={<ManageJobProviders />} />
-          <Route path="/admin/job-requests" element={<ManageJobRequests />} />
-          <Route path="/admin/change-password" element={<AdminChangePassword />} />
-          <Route path="/admin/clear-jobs" element={<ClearJobs />} />
-          <Route path="/admin/ban-user" element={<BanUser />} />
-          
-          {/* Job Provider Routes */}
-          <Route path="/job-provider" element={<JobProviderDashboard />} />
-          <Route path="/job-provider/sign-up" element={<JobProviderSignUp />} />
-          <Route path="/job-provider/post-job" element={<PostJob />} />
-          <Route path="/job-provider/browse-seekers" element={<BrowseJobSeekers />} />
-          <Route path="/job-provider/ai-screening" element={<AIScreening />} />
-          <Route path="/job-provider/manage-requests" element={<ManageApplications />} />
-          <Route path="/job-provider/messages" element={<JobProviderMessages />} />
-          <Route path="/job-provider/settings" element={<JobProviderSettings />} />
-          <Route path="/job-provider/change-password" element={<JobProviderChangePassword />} />
-          <Route path="/job-provider/evaluate/:seekerId" element={<EvaluateSeeker />} />
-          <Route path="/job-provider/delete-job/:jobId" element={<DeleteJob />} />
-          <Route path="/job-provider/story" element={<StoryUploader />} />
-          <Route path="/job-provider/applicant/:id" element={<ApplicantProfile />} />
-          
-          {/* Job Seeker Routes */}
-          <Route path="/job-seeker" element={<JobSeekerDashboard />} />
-          <Route path="/job-seeker/profile" element={<Profile />} />
-          <Route path="/job-seeker/applications" element={<Applications />} />
-          <Route path="/job-seeker/jobs" element={<Jobs />} />
-          <Route path="/job-seeker/favorites" element={<Favorites />} />
-          <Route path="/job-seeker/messages" element={<JobSeekerMessages />} />
-          <Route path="/job-seeker/notifications" element={<Notifications />} />
-          <Route path="/job-seeker/change-password" element={<JobSeekerChangePassword />} />
-          <Route path="/job-seeker/evaluation" element={<Evaluation />} />
-          <Route path="/job-seeker/accepted-jobs" element={<AcceptedJobs />} />
-          <Route path="/job-seeker/private-offers" element={<PrivateOffers />} />
-          <Route path="/job-seeker/search-provider" element={<SearchProvider />} />
-          <Route path="/job-seeker/provider/:id" element={<ProviderProfile />} />
-          <Route path="/job-seeker/ai-screening" element={<AIScreeningSeeker />} />
-          <Route path="/job-seeker/rate-provider/:id" element={<RateProvider />} />
-          
-          {/* AI Routes */}
-          <Route path="/ai/match-result" element={<AIMatchResult />} />
-          
-          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </BrowserRouter>
+      <UserProvider>
+        <Toaster />
+        <Sonner />
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/companies" element={<Companies />} />
+            <Route path="/resources" element={<Resources />} />
+            <Route path="/for-employers" element={<ForEmployers />} />
+            <Route path="/category/:category" element={<CategoryJobs />} />
+            <Route path="/sign-in" element={<SignIn />} />
+            <Route path="/sign-up" element={<SignUp />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/contact-us" element={<ContactUs />} />
+            
+            {/* Admin Routes */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminDashboard />} />
+            <Route path="/admin/job-seekers" element={<ManageJobSeekers />} />
+            <Route path="/admin/job-providers" element={<ManageJobProviders />} />
+            <Route path="/admin/job-requests" element={<ManageJobRequests />} />
+            <Route path="/admin/change-password" element={<AdminChangePassword />} />
+            <Route path="/admin/clear-jobs" element={<ClearJobs />} />
+            <Route path="/admin/ban-user" element={<BanUser />} />
+            
+            {/* Job Provider Routes */}
+            <Route path="/job-provider" element={<JobProviderDashboard />} />
+            <Route path="/job-provider/sign-up" element={<JobProviderSignUp />} />
+            <Route path="/job-provider/post-job" element={<PostJob />} />
+            <Route path="/job-provider/browse-seekers" element={<BrowseJobSeekers />} />
+            <Route path="/job-provider/ai-screening" element={<AIScreening />} />
+            <Route path="/job-provider/manage-requests" element={<ManageApplications />} />
+            <Route path="/job-provider/messages" element={<JobProviderMessages />} />
+            <Route path="/job-provider/settings" element={<JobProviderSettings />} />
+            <Route path="/job-provider/change-password" element={<JobProviderChangePassword />} />
+            <Route path="/job-provider/evaluate/:seekerId" element={<EvaluateSeeker />} />
+            <Route path="/job-provider/delete-job/:jobId" element={<DeleteJob />} />
+            <Route path="/job-provider/story" element={<StoryUploader />} />
+            <Route path="/job-provider/applicant/:id" element={<ApplicantProfile />} />
+            
+            {/* Job Seeker Routes */}
+            <Route path="/job-seeker" element={<JobSeekerDashboard />} />
+            <Route path="/job-seeker/profile" element={<Profile />} />
+            <Route path="/job-seeker/applications" element={<Applications />} />
+            <Route path="/job-seeker/jobs" element={<Jobs />} />
+            <Route path="/job-seeker/favorites" element={<Favorites />} />
+            <Route path="/job-seeker/messages" element={<JobSeekerMessages />} />
+            <Route path="/job-seeker/notifications" element={<Notifications />} />
+            <Route path="/job-seeker/change-password" element={<JobSeekerChangePassword />} />
+            <Route path="/job-seeker/evaluation" element={<Evaluation />} />
+            <Route path="/job-seeker/accepted-jobs" element={<AcceptedJobs />} />
+            <Route path="/job-seeker/private-offers" element={<PrivateOffers />} />
+            <Route path="/job-seeker/search-provider" element={<SearchProvider />} />
+            <Route path="/job-seeker/provider/:id" element={<ProviderProfile />} />
+            <Route path="/job-seeker/ai-screening" element={<AIScreeningSeeker />} />
+            <Route path="/job-seeker/rate-provider/:id" element={<RateProvider />} />
+            
+            {/* AI Routes */}
+            <Route path="/ai/match-result" element={<AIMatchResult />} />
+            
+            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
+      </UserProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
