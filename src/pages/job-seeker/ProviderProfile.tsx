@@ -57,7 +57,7 @@ const ProviderProfile = () => {
                     <span>Founded in 2010</span>
                   </div>
                 </div>
-              </div>
+              </Card>
             </div>
 
             <div className="flex gap-4">
