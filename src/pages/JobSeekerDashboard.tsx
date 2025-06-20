@@ -1,4 +1,5 @@
 
+import React, { useMemo } from "react";
 import { NavBar } from "@/components/NavBar";
 import { Footer } from "@/components/Footer";
 import { User, Briefcase, MessageSquare, Star, Heart, Bell, Settings, Eye, FileText, TrendingUp } from "lucide-react";
@@ -6,48 +7,82 @@ import { Link } from "react-router-dom";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 
+const StatsCard = React.memo(({ stat }: { stat: any }) => (
+  <div className="glass-card p-6">
+    <div className="flex items-center justify-between">
+      <div>
+        <p className="text-sm text-foreground/70">{stat.title}</p>
+        <p className="text-2xl font-bold">{stat.count}</p>
+      </div>
+      <div 
+        className="h-12 w-12 rounded-xl flex items-center justify-center"
+        style={{ backgroundColor: `${stat.color}20` }}
+      >
+        <stat.icon className="h-6 w-6" style={{ color: stat.color }} />
+      </div>
+    </div>
+  </div>
+));
+
+const ApplicationCard = React.memo(({ app }: { app: any }) => (
+  <div className="flex items-center justify-between p-4 glass rounded-lg">
+    <div>
+      <h3 className="font-medium">{app.position}</h3>
+      <p className="text-sm text-foreground/70">{app.company} • Applied {app.applied}</p>
+    </div>
+    <span className={`px-3 py-1 rounded-full text-sm ${
+      app.status === 'Accepted' ? 'bg-green-100 text-green-800' :
+      app.status === 'Interview Scheduled' ? 'bg-blue-100 text-blue-800' :
+      'bg-yellow-100 text-yellow-800'
+    }`}>
+      {app.status}
+    </span>
+  </div>
+));
+
 const JobSeekerDashboard = () => {
-  const stats = [
+  // Memoize static data to prevent unnecessary recalculations
+  const stats = useMemo(() => [
     { title: "Applications", count: 8, icon: Briefcase, color: "#3B82F6" },
     { title: "Messages", count: 3, icon: MessageSquare, color: "#10B981" },
     { title: "Favorites", count: 12, icon: Heart, color: "#EF4444" },
     { title: "Profile Views", count: 45, icon: Eye, color: "#8B5CF6" },
-  ];
+  ], []);
 
-  const recentApplications = [
+  const recentApplications = useMemo(() => [
     { id: 1, company: "TechCorp Inc", position: "Frontend Developer", status: "Under Review", applied: "2 days ago" },
     { id: 2, company: "StartupXYZ", position: "React Developer", status: "Interview Scheduled", applied: "5 days ago" },
     { id: 3, company: "BigTech Solutions", position: "UI/UX Designer", status: "Accepted", applied: "1 week ago" },
-  ];
+  ], []);
 
-  const applicationTrends = [
-    { month: "Jan", applications: 4 },
-    { month: "Feb", applications: 6 },
-    { month: "Mar", applications: 8 },
-    { month: "Apr", applications: 5 },
-    { month: "May", applications: 9 },
-    { month: "Jun", applications: 8 },
-  ];
+  const chartData = useMemo(() => ({
+    applicationTrends: [
+      { month: "Jan", applications: 4 },
+      { month: "Feb", applications: 6 },
+      { month: "Mar", applications: 8 },
+      { month: "Apr", applications: 5 },
+      { month: "May", applications: 9 },
+      { month: "Jun", applications: 8 },
+    ],
+    skillsDemand: [
+      { skill: "React", demand: 85 },
+      { skill: "JavaScript", demand: 92 },
+      { skill: "TypeScript", demand: 78 },
+      { skill: "Node.js", demand: 65 },
+      { skill: "Python", demand: 58 },
+    ],
+    applicationStatus: [
+      { name: "Under Review", value: 45, color: "#F59E0B" },
+      { name: "Interview", value: 25, color: "#3B82F6" },
+      { name: "Accepted", value: 20, color: "#10B981" },
+      { name: "Rejected", value: 10, color: "#EF4444" },
+    ]
+  }), []);
 
-  const skillsDemand = [
-    { skill: "React", demand: 85 },
-    { skill: "JavaScript", demand: 92 },
-    { skill: "TypeScript", demand: 78 },
-    { skill: "Node.js", demand: 65 },
-    { skill: "Python", demand: 58 },
-  ];
-
-  const applicationStatus = [
-    { name: "Under Review", value: 45, color: "#F59E0B" },
-    { name: "Interview", value: 25, color: "#3B82F6" },
-    { name: "Accepted", value: 20, color: "#10B981" },
-    { name: "Rejected", value: 10, color: "#EF4444" },
-  ];
-
-  const chartConfig = {
+  const chartConfig = useMemo(() => ({
     applications: { label: "Applications", color: "#3B82F6" },
     demand: { label: "Demand %", color: "#10B981" },
-  };
+  }), []);
 
   return (
     <div className="min-h-screen">
@@ -63,20 +98,7 @@ const JobSeekerDashboard = () => {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
             {stats.map((stat, index) => (
-              <div key={index} className="glass-card p-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-sm text-foreground/70">{stat.title}</p>
-                    <p className="text-2xl font-bold">{stat.count}</p>
-                  </div>
-                  <div 
-                    className="h-12 w-12 rounded-xl flex items-center justify-center"
-                    style={{ backgroundColor: `${stat.color}20` }}
-                  >
-                    <stat.icon className="h-6 w-6" style={{ color: stat.color }} />
-                  </div>
-                </div>
-              </div>
+              <StatsCard key={index} stat={stat} />
             ))}
           </div>
 
@@ -87,7 +109,7 @@ const JobSeekerDashboard = () => {
                 <h3 className="text-lg font-semibold">Application Trends</h3>
               </div>
               <ChartContainer config={chartConfig} className="h-64">
-                <LineChart data={applicationTrends}>
+                <LineChart data={chartData.applicationTrends}>
                   <XAxis dataKey="month" />
                   <YAxis />
                   <ChartTooltip content={<ChartTooltipContent />} />
@@ -99,7 +121,7 @@ const JobSeekerDashboard = () => {
             <div className="glass-card p-6">
               <h3 className="text-lg font-semibold mb-4">Skills in Demand</h3>
               <ChartContainer config={chartConfig} className="h-64">
-                <BarChart data={skillsDemand}>
+                <BarChart data={chartData.skillsDemand}>
                   <XAxis dataKey="skill" />
                   <YAxis />
                   <ChartTooltip content={<ChartTooltipContent />} />
@@ -113,14 +135,14 @@ const JobSeekerDashboard = () => {
               <ChartContainer config={chartConfig} className="h-64">
                 <PieChart>
                   <Pie
-                    data={applicationStatus}
+                    data={chartData.applicationStatus}
                     cx="50%"
                     cy="50%"
                     outerRadius={80}
                     dataKey="value"
                     label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
                   >
-                    {applicationStatus.map((entry, index) => (
+                    {chartData.applicationStatus.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
@@ -175,19 +197,7 @@ const JobSeekerDashboard = () => {
             </div>
             <div className="space-y-4">
               {recentApplications.map((app) => (
-                <div key={app.id} className="flex items-center justify-between p-4 glass rounded-lg">
-                  <div>
-                    <h3 className="font-medium">{app.position}</h3>
-                    <p className="text-sm text-foreground/70">{app.company} • Applied {app.applied}</p>
-                  </div>
-                  <span className={`px-3 py-1 rounded-full text-sm ${
-                    app.status === 'Accepted' ? 'bg-green-100 text-green-800' :
-                    app.status === 'Interview Scheduled' ? 'bg-blue-100 text-blue-800' :
-                    'bg-yellow-100 text-yellow-800'
-                  }`}>
-                    {app.status}
-                  </span>
-                </div>
+                <ApplicationCard key={app.id} app={app} />
               ))}
             </div>
           </div>
@@ -198,4 +208,4 @@ const JobSeekerDashboard = () => {
   );
 };
 
-export default JobSeekerDashboard;
+export default React.memo(JobSeekerDashboard);

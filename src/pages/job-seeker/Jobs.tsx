@@ -1,11 +1,60 @@
-
+import React, { useState, useMemo, useCallback } from "react";
 import { NavBar } from "@/components/NavBar";
 import { Footer } from "@/components/Footer";
-import { useState } from "react";
 import { Search, Filter, MapPin, Clock, Heart, Briefcase } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { OptimizedImage } from "@/components/ui/optimized-image";
+
+const JobCard = React.memo(({ job }: { job: any }) => (
+  <div className="glass-card p-6 hover:scale-[1.02] transition-all duration-300">
+    <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start gap-4">
+        <OptimizedImage
+          src={job.logo}
+          alt={job.company}
+          className="w-12 h-12 rounded-lg object-cover"
+          width={48}
+          height={48}
+        />
+        <div>
+          <h3 className="text-lg font-semibold">{job.title}</h3>
+          <p className="text-foreground/70">{job.company}</p>
+          <div className="flex items-center gap-4 text-sm text-foreground/60 mt-1">
+            <span className="flex items-center gap-1">
+              <MapPin className="h-4 w-4" />
+              {job.location}
+            </span>
+            <span className="flex items-center gap-1">
+              <Briefcase className="h-4 w-4" />
+              {job.type}
+            </span>
+            <span className="flex items-center gap-1">
+              <Clock className="h-4 w-4" />
+              {job.posted}
+            </span>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-col items-end gap-2">
+        <span className="text-lg font-semibold text-green-600">{job.aiMatch}% Match</span>
+        <Button size="sm" variant="outline">
+          <Heart className="h-4 w-4" />
+        </Button>
+      </div>
+    </div>
+    
+    <p className="text-foreground/70 mb-4">{job.description}</p>
+    <div className="flex items-center justify-between">
+      <span className="text-lg font-semibold">{job.salary}</span>
+      <div className="flex gap-2">
+        <Button size="sm" variant="outline">View Details</Button>
+        <Button size="sm">Apply Now</Button>
+      </div>
+    </div>
+  </div>
+));
 
 const Jobs = () => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -15,7 +64,7 @@ const Jobs = () => {
     salary: "",
   });
 
-  const jobs = [
+  const jobs = useMemo(() => [
     {
       id: 1,
       title: "Senior React Developer",
@@ -52,7 +101,15 @@ const Jobs = () => {
       logo: "https://images.unsplash.com/photo-1549923746-c502d488b3ea?w=50&h=50&fit=crop",
       aiMatch: 82,
     },
-  ];
+  ], []);
+
+  const handleSearchChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  }, []);
+
+  const handleFilterChange = useCallback((key: string, value: string) => {
+    setFilters(prev => ({ ...prev, [key]: value }));
+  }, []);
 
   return (
     <div className="min-h-screen">
@@ -73,7 +130,7 @@ const Jobs = () => {
                 <Input
                   placeholder="Search jobs by title, company, or skills..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
+                  onChange={handleSearchChange}
                   className="pl-10"
                 />
               </div>
@@ -84,7 +141,7 @@ const Jobs = () => {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Select onValueChange={(value) => setFilters({ ...filters, location: value })}>
+              <Select onValueChange={(value) => handleFilterChange('location', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Location" />
                 </SelectTrigger>
@@ -96,7 +153,7 @@ const Jobs = () => {
                 </SelectContent>
               </Select>
 
-              <Select onValueChange={(value) => setFilters({ ...filters, jobType: value })}>
+              <Select onValueChange={(value) => handleFilterChange('jobType', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Job Type" />
                 </SelectTrigger>
@@ -108,7 +165,7 @@ const Jobs = () => {
                 </SelectContent>
               </Select>
 
-              <Select onValueChange={(value) => setFilters({ ...filters, salary: value })}>
+              <Select onValueChange={(value) => handleFilterChange('salary', value)}>
                 <SelectTrigger>
                   <SelectValue placeholder="Salary Range" />
                 </SelectTrigger>
@@ -123,50 +180,7 @@ const Jobs = () => {
 
           <div className="space-y-6">
             {jobs.map((job) => (
-              <div key={job.id} className="glass-card p-6 hover:scale-[1.02] transition-all duration-300">
-                <div className="flex items-start justify-between mb-4">
-                  <div className="flex items-start gap-4">
-                    <img
-                      src={job.logo}
-                      alt={job.company}
-                      className="w-12 h-12 rounded-lg object-cover"
-                    />
-                    <div>
-                      <h3 className="text-lg font-semibold">{job.title}</h3>
-                      <p className="text-foreground/70">{job.company}</p>
-                      <div className="flex items-center gap-4 text-sm text-foreground/60 mt-1">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="h-4 w-4" />
-                          {job.location}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Briefcase className="h-4 w-4" />
-                          {job.type}
-                        </span>
-                        <span className="flex items-center gap-1">
-                          <Clock className="h-4 w-4" />
-                          {job.posted}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="flex flex-col items-end gap-2">
-                    <span className="text-lg font-semibold text-green-600">{job.aiMatch}% Match</span>
-                    <Button size="sm" variant="outline">
-                      <Heart className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-                
-                <p className="text-foreground/70 mb-4">{job.description}</p>
-                <div className="flex items-center justify-between">
-                  <span className="text-lg font-semibold">{job.salary}</span>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline">View Details</Button>
-                    <Button size="sm">Apply Now</Button>
-                  </div>
-                </div>
-              </div>
+              <JobCard key={job.id} job={job} />
             ))}
           </div>
         </div>
@@ -176,4 +190,4 @@ const Jobs = () => {
   );
 };
 
-export default Jobs;
+export default React.memo(Jobs);
