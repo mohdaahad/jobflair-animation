@@ -1,8 +1,10 @@
 
 import { NavBar } from "@/components/NavBar";
 import { Footer } from "@/components/Footer";
-import { User, Briefcase, MessageSquare, Star, Heart, Bell, Settings, Eye, FileText } from "lucide-react";
+import { User, Briefcase, MessageSquare, Star, Heart, Bell, Settings, Eye, FileText, TrendingUp } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell } from "recharts";
 
 const JobSeekerDashboard = () => {
   const stats = [
@@ -17,6 +19,35 @@ const JobSeekerDashboard = () => {
     { id: 2, company: "StartupXYZ", position: "React Developer", status: "Interview Scheduled", applied: "5 days ago" },
     { id: 3, company: "BigTech Solutions", position: "UI/UX Designer", status: "Accepted", applied: "1 week ago" },
   ];
+
+  const applicationTrends = [
+    { month: "Jan", applications: 4 },
+    { month: "Feb", applications: 6 },
+    { month: "Mar", applications: 8 },
+    { month: "Apr", applications: 5 },
+    { month: "May", applications: 9 },
+    { month: "Jun", applications: 8 },
+  ];
+
+  const skillsDemand = [
+    { skill: "React", demand: 85 },
+    { skill: "JavaScript", demand: 92 },
+    { skill: "TypeScript", demand: 78 },
+    { skill: "Node.js", demand: 65 },
+    { skill: "Python", demand: 58 },
+  ];
+
+  const applicationStatus = [
+    { name: "Under Review", value: 45, color: "#F59E0B" },
+    { name: "Interview", value: 25, color: "#3B82F6" },
+    { name: "Accepted", value: 20, color: "#10B981" },
+    { name: "Rejected", value: 10, color: "#EF4444" },
+  ];
+
+  const chartConfig = {
+    applications: { label: "Applications", color: "#3B82F6" },
+    demand: { label: "Demand %", color: "#10B981" },
+  };
 
   return (
     <div className="min-h-screen">
@@ -49,13 +80,63 @@ const JobSeekerDashboard = () => {
             ))}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-            <Link to="/job-seeker/profile" className="glass-card p-6 hover:scale-105 transition-all duration-300">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div className="glass-card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="h-5 w-5 text-blue-500" />
+                <h3 className="text-lg font-semibold">Application Trends</h3>
+              </div>
+              <ChartContainer config={chartConfig} className="h-64">
+                <LineChart data={applicationTrends}>
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Line type="monotone" dataKey="applications" stroke="#3B82F6" strokeWidth={2} />
+                </LineChart>
+              </ChartContainer>
+            </div>
+
+            <div className="glass-card p-6">
+              <h3 className="text-lg font-semibold mb-4">Skills in Demand</h3>
+              <ChartContainer config={chartConfig} className="h-64">
+                <BarChart data={skillsDemand}>
+                  <XAxis dataKey="skill" />
+                  <YAxis />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Bar dataKey="demand" fill="#10B981" />
+                </BarChart>
+              </ChartContainer>
+            </div>
+
+            <div className="glass-card p-6">
+              <h3 className="text-lg font-semibold mb-4">Application Status</h3>
+              <ChartContainer config={chartConfig} className="h-64">
+                <PieChart>
+                  <Pie
+                    data={applicationStatus}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    dataKey="value"
+                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {applicationStatus.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                </PieChart>
+              </ChartContainer>
+            </div>
+
+            <div className="glass-card p-6 hover:scale-105 transition-all duration-300">
               <User className="h-8 w-8 text-blue-500 mb-4" />
               <h3 className="text-lg font-semibold mb-2">Edit Profile</h3>
               <p className="text-sm text-foreground/70">Update your profile and resume</p>
-            </Link>
+            </div>
+          </div>
 
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
             <Link to="/job-seeker/applications" className="glass-card p-6 hover:scale-105 transition-all duration-300">
               <Briefcase className="h-8 w-8 text-green-500 mb-4" />
               <h3 className="text-lg font-semibold mb-2">Track Applications</h3>

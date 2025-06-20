@@ -1,8 +1,10 @@
 
 import { NavBar } from "@/components/NavBar";
 import { Footer } from "@/components/Footer";
-import { Plus, Users, MessageSquare, Search, Star, Settings, Eye, Trash2, FileText } from "lucide-react";
+import { Plus, Users, MessageSquare, Search, Star, Settings, Eye, Trash2, FileText, TrendingUp, BarChart3 } from "lucide-react";
 import { Link } from "react-router-dom";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area } from "recharts";
 
 const JobProviderDashboard = () => {
   const stats = [
@@ -17,6 +19,37 @@ const JobProviderDashboard = () => {
     { id: 2, title: "UI/UX Designer", applications: 23, status: "Active", posted: "5 days ago" },
     { id: 3, title: "Product Manager", applications: 8, status: "Draft", posted: "1 week ago" },
   ];
+
+  const hiringTrends = [
+    { month: "Jan", hires: 5, applications: 20 },
+    { month: "Feb", hires: 8, applications: 35 },
+    { month: "Mar", hires: 12, applications: 45 },
+    { month: "Apr", hires: 7, applications: 28 },
+    { month: "May", hires: 15, applications: 52 },
+    { month: "Jun", hires: 18, applications: 65 },
+  ];
+
+  const jobCategories = [
+    { category: "Engineering", jobs: 8, color: "#3B82F6" },
+    { category: "Design", jobs: 3, color: "#10B981" },
+    { category: "Marketing", jobs: 2, color: "#F59E0B" },
+    { category: "Sales", jobs: 4, color: "#EF4444" },
+    { category: "Operations", jobs: 1, color: "#8B5CF6" },
+  ];
+
+  const applicationQuality = [
+    { week: "Week 1", qualified: 75, total: 100 },
+    { week: "Week 2", qualified: 68, total: 95 },
+    { week: "Week 3", qualified: 82, total: 110 },
+    { week: "Week 4", qualified: 78, total: 105 },
+  ];
+
+  const chartConfig = {
+    hires: { label: "Hires", color: "#10B981" },
+    applications: { label: "Applications", color: "#3B82F6" },
+    qualified: { label: "Qualified", color: "#10B981" },
+    total: { label: "Total", color: "#F59E0B" },
+  };
 
   return (
     <div className="min-h-screen">
@@ -47,6 +80,61 @@ const JobProviderDashboard = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+            <div className="glass-card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <TrendingUp className="h-5 w-5 text-blue-500" />
+                <h3 className="text-lg font-semibold">Hiring Trends</h3>
+              </div>
+              <ChartContainer config={chartConfig} className="h-64">
+                <AreaChart data={hiringTrends}>
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Area type="monotone" dataKey="applications" stackId="1" stroke="#3B82F6" fill="#3B82F6" fillOpacity={0.3} />
+                  <Area type="monotone" dataKey="hires" stackId="2" stroke="#10B981" fill="#10B981" fillOpacity={0.8} />
+                </AreaChart>
+              </ChartContainer>
+            </div>
+
+            <div className="glass-card p-6">
+              <div className="flex items-center gap-2 mb-4">
+                <BarChart3 className="h-5 w-5 text-green-500" />
+                <h3 className="text-lg font-semibold">Job Categories</h3>
+              </div>
+              <ChartContainer config={chartConfig} className="h-64">
+                <PieChart>
+                  <Pie
+                    data={jobCategories}
+                    cx="50%"
+                    cy="50%"
+                    outerRadius={80}
+                    dataKey="jobs"
+                    label={({ category, jobs }) => `${category}: ${jobs}`}
+                  >
+                    {jobCategories.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={entry.color} />
+                    ))}
+                  </Pie>
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                </PieChart>
+              </ChartContainer>
+            </div>
+
+            <div className="glass-card p-6 lg:col-span-2">
+              <h3 className="text-lg font-semibold mb-4">Application Quality</h3>
+              <ChartContainer config={chartConfig} className="h-64">
+                <BarChart data={applicationQuality}>
+                  <XAxis dataKey="week" />
+                  <YAxis />
+                  <ChartTooltip content={<ChartTooltipContent />} />
+                  <Bar dataKey="total" fill="#F59E0B" name="Total Applications" />
+                  <Bar dataKey="qualified" fill="#10B981" name="Qualified" />
+                </BarChart>
+              </ChartContainer>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
