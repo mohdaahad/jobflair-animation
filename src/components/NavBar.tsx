@@ -6,6 +6,14 @@ import { useUser } from "@/contexts/UserContext";
 import { Briefcase, Menu, Search, User, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Link } from "react-router-dom";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
 
 export function NavBar() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -97,64 +105,59 @@ export function NavBar() {
             </Link>
           )}
           
-          <button 
-            className="md:hidden glass p-2 rounded-full"
-            onClick={() => setIsMobileMenuOpen(true)}
-          >
-            <Menu className="h-5 w-5" />
-          </button>
-        </div>
-      </div>
-
-      {/* Mobile Menu */}
-      <div className={cn(
-        "fixed inset-0 bg-background/80 backdrop-blur-sm z-50 md:hidden transition-all duration-300",
-        isMobileMenuOpen ? "opacity-100" : "opacity-0 pointer-events-none"
-      )}>
-        <div className={cn(
-          "fixed inset-y-0 right-0 w-3/4 bg-card glass p-6 shadow-xl transition-transform duration-300 transform",
-          isMobileMenuOpen ? "translate-x-0" : "translate-x-full"
-        )}>
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-xl font-bold">Menu</h2>
-            <button
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="p-1 rounded-full glass"
-            >
-              <X className="h-5 w-5" />
-            </button>
-          </div>
-          
-          <nav className="flex flex-col space-y-4">
-            {navigationLinks.map((link) => (
-              <Link
-                key={link.to}
-                to={link.to}
-                className="text-foreground/80 hover:text-job transition-colors duration-200 py-2 border-b border-border"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
-          
-          <div className="mt-auto pt-8 flex flex-col space-y-3">
-            <button className="flex items-center gap-2 w-full glass px-3 py-2 rounded-full hover:bg-white/20 dark:hover:bg-black/30 transition-all duration-200">
-              <Search className="h-4 w-4 text-foreground/70" />
-              <span className="text-sm text-foreground/70">Search...</span>
-            </button>
-            
-            {!isAuthenticated && (
-              <Link 
-                to="/sign-in"
-                className="flex justify-center items-center gap-2 w-full glass px-4 py-2 rounded-full bg-job hover:bg-job-hover text-white transition-all duration-200"
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                <User className="h-4 w-4" />
-                <span>Sign In</span>
-              </Link>
-            )}
-          </div>
+          {/* Mobile Menu Drawer */}
+          <Drawer open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+            <DrawerTrigger asChild>
+              <button className="md:hidden glass p-2 rounded-full">
+                <Menu className="h-5 w-5" />
+              </button>
+            </DrawerTrigger>
+            <DrawerContent className="bg-background border-border">
+              <DrawerHeader className="border-b border-border">
+                <div className="flex justify-between items-center">
+                  <DrawerTitle className="text-xl font-bold">Menu</DrawerTitle>
+                  <DrawerClose asChild>
+                    <button className="p-1 rounded-full hover:bg-muted">
+                      <X className="h-5 w-5" />
+                    </button>
+                  </DrawerClose>
+                </div>
+              </DrawerHeader>
+              
+              <div className="p-6">
+                <nav className="flex flex-col space-y-4">
+                  {navigationLinks.map((link) => (
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      className="text-foreground hover:text-job transition-colors duration-200 py-3 border-b border-border/50 font-medium"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </nav>
+                
+                <div className="mt-8 flex flex-col space-y-4">
+                  <button className="flex items-center gap-2 w-full bg-muted px-4 py-3 rounded-lg hover:bg-muted/80 transition-all duration-200">
+                    <Search className="h-4 w-4 text-foreground/70" />
+                    <span className="text-sm text-foreground/70">Search...</span>
+                  </button>
+                  
+                  {!isAuthenticated && (
+                    <Link 
+                      to="/sign-in"
+                      className="flex justify-center items-center gap-2 w-full bg-job hover:bg-job-hover text-white px-4 py-3 rounded-lg transition-all duration-200 font-medium"
+                      onClick={() => setIsMobileMenuOpen(false)}
+                    >
+                      <User className="h-4 w-4" />
+                      <span>Sign In</span>
+                    </Link>
+                  )}
+                </div>
+              </div>
+            </DrawerContent>
+          </Drawer>
         </div>
       </div>
     </header>
