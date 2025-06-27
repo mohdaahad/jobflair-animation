@@ -55,41 +55,43 @@ export const UserProfileMenu = () => {
       </Button>
 
       {isOpen && (
-        <div className="absolute right-0 top-full mt-2 w-56 glass rounded-lg shadow-lg z-50">
-          <div className="p-3 border-b border-border">
-            <p className="font-medium">{user.name}</p>
-            <p className="text-sm text-foreground/60">{user.email}</p>
-            <span className="text-xs bg-job/20 text-job px-2 py-1 rounded-full capitalize">
+        <div className="absolute right-0 top-full mt-2 w-56 bg-white/95 dark:bg-gray-900/95 backdrop-blur-lg rounded-lg shadow-xl border border-white/30 dark:border-gray-700/50 z-50">
+          <div className="p-4 border-b border-gray-200/50 dark:border-gray-700/50 bg-gradient-to-r from-job/10 to-job-accent/10 rounded-t-lg">
+            <p className="font-semibold text-gray-900 dark:text-white truncate">{user.name}</p>
+            <p className="text-sm text-gray-600 dark:text-gray-300 truncate">{user.email}</p>
+            <span className="inline-block mt-2 text-xs bg-job/20 dark:bg-job/30 text-job dark:text-job-light px-2 py-1 rounded-full capitalize font-medium">
               {userType?.replace('-', ' ')}
             </span>
           </div>
           
-          <div className="p-2">
+          <div className="p-2 bg-white/80 dark:bg-gray-900/80 rounded-b-lg">
             {profileLinks.map((link) => {
               const IconComponent = link.icon;
               return (
                 <Link
                   key={link.to}
                   to={link.to}
-                  className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-foreground/10 transition-colors"
+                  className="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-md hover:bg-gray-100/80 dark:hover:bg-gray-800/50 transition-all duration-200 text-gray-700 dark:text-gray-200 hover:text-job dark:hover:text-job-light"
                   onClick={() => setIsOpen(false)}
                 >
-                  <IconComponent className="h-4 w-4" />
-                  {link.label}
+                  <IconComponent className="h-4 w-4 flex-shrink-0" />
+                  <span className="font-medium">{link.label}</span>
                 </Link>
               );
             })}
             
-            <button
-              onClick={() => {
-                logout();
-                setIsOpen(false);
-              }}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm rounded-md hover:bg-foreground/10 transition-colors text-red-500"
-            >
-              <LogOut className="h-4 w-4" />
-              Logout
-            </button>
+            <div className="border-t border-gray-200/50 dark:border-gray-700/50 mt-2 pt-2">
+              <button
+                onClick={() => {
+                  logout();
+                  setIsOpen(false);
+                }}
+                className="flex items-center gap-3 w-full px-3 py-2.5 text-sm rounded-md hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200 text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+              >
+                <LogOut className="h-4 w-4 flex-shrink-0" />
+                <span className="font-medium">Logout</span>
+              </button>
+            </div>
           </div>
         </div>
       )}
